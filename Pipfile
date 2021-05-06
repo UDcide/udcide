@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+click = "*"
+quark-engine = "*"
+androguard = "*"
+prettytable = "*"
+pythondialog = "*"
+
+[dev-packages]
+autopep8 = "*"
+pytest = "*"
+rope = "*"
+
+[requires]
+python_version = "3.8.5"
