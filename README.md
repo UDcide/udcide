@@ -1,6 +1,6 @@
 <p align="center">
+    <img src="https://i.imgur.com/H5Vd6KI.png"/>
     <b> An alternative way to deal with Android Malware </b>
-    <img src="https://i.imgur.com/OxKfAaD.jpg"/>
 </p>
 
 
