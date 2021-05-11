@@ -1,13 +1,13 @@
 <p align="center">
     <img src="https://i.imgur.com/H5Vd6KI.png"/>
-    <b> Android Malware Behavior Editor </b>
+    <b> Android Malware Behavior Deleter </b>
 </p>
 
 
 
 # UDcide
 
-UDcide is a tool that provides alternative way to deal with Android malware. We help you to detect and remove specific behaviors in the malware rather than just delete the whole binary. And surprisingly, we make the binary runs still. This enables possibilities of malware research and makes good use of the normal behaviors in the malware.
+UDcide is a tool that provides alternative way to deal with Android malware. We help you to detect and remove specific behaviors in the malware rather than just delete the whole binary. And surprisingly, we make the binary runs still. This enables possibilities of malware investigation e.g. delete behaviors like VM detection, icon hiding etc. Making analysts overcome malware evasion problems during the analysis.
 
 ![](https://i.imgur.com/TrvdsEr.gif)
 
