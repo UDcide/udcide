@@ -7,7 +7,7 @@
 
 # UDcide
 
-UDcide is a tool that provides alternative way to deal with Android malware. We help you to detect and remove specific behaviors in the malware rather than just delete the whole binary. And surprisingly, we make the binary runs still. This enables possibilities of malware investigation e.g. delete behaviors like VM detection, icon hiding etc. Making analysts overcome malware evasion problems during the analysis.
+UDcide is a tool that provides alternative way to deal with Android malware. We help you to detect and remove specific behaviors in the malware rather than just delete the whole binary. And surprisingly, we make the binary runs still. This enables possibilities of malware investigation (e.g. Delete behaviors like VM detection, icon hiding etc. Making analysts overcome malware evasion problems during the analysis).
 
 ![](https://i.imgur.com/TrvdsEr.gif)
 
