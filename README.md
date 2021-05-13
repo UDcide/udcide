@@ -12,6 +12,7 @@ UDcide is a tool that provides alternative way to deal with Android malware. We 
 ![](https://i.imgur.com/TrvdsEr.gif)
 
 ## Requirements
++ dialog >= 1.3-20190808
 + JDK >= 11
 + Apktool >= 2.5.0
 
