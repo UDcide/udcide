@@ -12,8 +12,13 @@ UDcide is a tool that provides alternative way to deal with Android malware. We 
 ![](https://i.imgur.com/TrvdsEr.gif)
 
 ## Showcase
+
+This is a showcase which the malware hides its icon after user clicks on it.
+
+As you can see, the icon of the malware disappear right after the user clicks.
 ![](https://i.imgur.com/jCqxOp2.gif)
 
+With UDcide, we remove this behavior, got this malware no where to hide.
 ![](https://i.imgur.com/WRc8iKy.gif)
 
 ## Requirements
