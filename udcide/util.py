@@ -52,7 +52,7 @@ class PrototypeHelper:
         r_index = prototype.index(')')
         parameter_str = prototype[l_index:r_index].strip()
 
-        parameter_list = re.findall('[ZBCSIJFD]|L.+;|\\[', parameter_str)
+        parameter_list = re.findall('[ZBCSIJFD]|L.+?;|\\[', parameter_str)
 
         array_count = len([p for p in parameter_list if p == '['])
 
