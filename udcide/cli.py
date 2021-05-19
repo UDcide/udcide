@@ -48,7 +48,7 @@ def entry_point(apk_path, apk_out, keywords):
                 check=True,
                 timeout=timeout,
             )
-            logger.info(process.stdout.decode())
+            logger.debug(process.stdout.decode())
             process.check_returncode()
         except CalledProcessError:
             if is_interactive():
@@ -68,20 +68,27 @@ def entry_point(apk_path, apk_out, keywords):
     # Setup logger
     logger = logging.getLogger('UDcide-dlog')
     logger.setLevel(logging.DEBUG)
+    ch_formater = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
     ch = logging.FileHandler('udcide.log', 'a')
+    ch.setFormatter(ch_formater)
+    ch.setLevel(logging.DEBUG)
     logger.addHandler(ch)
 
     if is_interactive():
         # Setup dialog
         dialog = Dialog(autowidgetsize=True)
         dialog.set_background_title('UDcide')
-        dialog.infobox('Detecting dependencies...')
     else:
         # Direct logger to stderr
         stream = logging.StreamHandler()
+        stream_formater = logging.Formatter('%(levelname)s: %(message)s')
+        stream.setFormatter(stream_formater)
+        stream.setLevel(logging.INFO)
         logger.addHandler(stream)
 
     # Find tools in $PATH
+    if is_interactive():
+        dialog.infobox('Detecting dependencies...')
     tools = ['apktool', 'jarsigner', 'keytool']
     tool_paths = dict()
     for tool in tools:
@@ -99,15 +106,18 @@ def entry_point(apk_path, apk_out, keywords):
 
     # Download Quark Rules
     if not os.path.exists(config.DIR_PATH):
+        msg = 'Downloading Quark rules...'
         if is_interactive():
-            dialog.infobox('Downloading Quark rules...')
-        logger.info('Downloading Quark rules.')
+            dialog.infobox(msg)
+        logger.info(msg)
         download()
 
     # Run Quark analysis
-    logger.info('Analysing APK with Quark-Engine.')
+    msg = 'Analysing APK with Quark-Engine.'
     if is_interactive():
-        dialog.gauge_start('Analysing with Quark-Engine...')
+        dialog.gauge_start(msg)
+    logger.info(msg)
+
     rule_dir = config.DIR_PATH
     quark = Quark(apk_path)
     rule_list = [x for x in os.listdir(rule_dir) if x.endswith('json')]
@@ -158,9 +168,10 @@ def entry_point(apk_path, apk_out, keywords):
                     selected_list.extend(behavior.sequences)
 
     if not selected_list:
+        msg = 'Nothing seleceted by user.'
         if is_interactive():
-            dialog.msgbox('You have seleceted nothing to disalbe.')
-        logger.warning('Nothing seleceted by user.')
+            dialog.msgbox(msg)
+        logger.warning(msg)
         return
 
     logger.info(f'Selected: {tags}')
@@ -171,9 +182,10 @@ def entry_point(apk_path, apk_out, keywords):
     TOTAL_STAGE = 4
     WEIGHT = 100 / TOTAL_STAGE
     # Unpack APK
+    msg = 'Unpacking APK...'
     if is_interactive():
-        dialog.gauge_start('Unpacking APK...')
-    logger.info('Unpacking APK with apktool.')
+        dialog.gauge_start(msg)
+    logger.info(msg)
 
     command = [tool_paths['apktool'], 'd', '-r', '-f', '-o', smali_dir, apk_path]
 
@@ -181,17 +193,19 @@ def entry_point(apk_path, apk_out, keywords):
         return
 
     # Modify APK
+    msg = 'Modifying APK...'
     if is_interactive():
-        dialog.gauge_update(int(WEIGHT * 1), 'Modifying APK...', True)
-    logger.info('Modifying APK.')
+        dialog.gauge_update(int(WEIGHT * 1), msg, True)
+    logger.info(msg)
 
     udcide = UDcide(apk_path, os.path.join(smali_dir, 'smali'))
     udcide.batch_disable(selected_list)
 
     # Pack APK
+    msg = 'Repacking APK...'
     if is_interactive():
-        dialog.gauge_update(int(WEIGHT * 2), 'Repacking APK...', True)
-    logger.info('Repacking APK with APKtool.')
+        dialog.gauge_update(int(WEIGHT * 2), msg, True)
+    logger.info(msg)
 
     command = [tool_paths['apktool'], 'b', '-o', apk_out, smali_dir]
 
@@ -200,9 +214,10 @@ def entry_point(apk_path, apk_out, keywords):
 
     # Sign APK
     # Generate random keystore
-    logger.info('Generating random keystore.')
+    msg = 'Generating random keystore...'
+    logger.info(msg)
     if is_interactive():
-        dialog.gauge_update(int(WEIGHT * 3), 'Generating random keystore...', True)
+        dialog.gauge_update(int(WEIGHT * 3), msg, True)
 
     keystore_name = generate_random_string(8)
     keystore_path = os.path.join(tempfile.gettempdir(), keystore_name)
@@ -231,9 +246,10 @@ def entry_point(apk_path, apk_out, keywords):
     if not exec_tool(command, 'Error on generating keystore.', input=input):
         return
 
+    msg = 'Signing...'
     if is_interactive():
-        dialog.gauge_update(int(WEIGHT * 3), 'Signing APK with random keystore.', True)
-    logger.info('Signing APK with random keystore.')
+        dialog.gauge_update(int(WEIGHT * 3), msg, True)
+    logger.info(msg)
 
     command = [
         tool_paths['jarsigner'],
@@ -249,14 +265,15 @@ def entry_point(apk_path, apk_out, keywords):
         alias_name,
     ]
 
-    if not exec_tool(command, 'Error on signing APK.', timeout=6):
+    if not exec_tool(command, 'Error on signing APK.', timeout=60):
         return
 
+    msg = f'Successfully generate APK at {apk_out}'
     if is_interactive():
         dialog.gauge_update(100)
         dialog.gauge_stop()
-        dialog.msgbox(f'Successfully generate APK at {apk_out}')
-    logger.info(f'Successfully generate APK at {apk_out}')
+        dialog.msgbox(msg)
+    logger.info(msg)
 
 
 if __name__ == '__main__':
