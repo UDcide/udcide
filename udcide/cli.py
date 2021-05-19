@@ -24,8 +24,8 @@ from udcide.report import Crime
 
 @click.command()
 @click.argument("apk_path", type=click.Path(exists=True, dir_okay=False, readable=True))
+@click.argument("keywords", type=str, nargs=-1)
 @click.option("-o", "apk_out", type=click.Path(file_okay=False), default="out")
-@click.option("-c", "keywords", type=str, multiple=True)
 def entry_point(apk_path, apk_out, keywords):
     def find_executable(executable, path=None):
         if not path:
