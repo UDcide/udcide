@@ -23,13 +23,13 @@ from udcide.report import Crime
 
 
 @click.command()
-@click.argument('apk_path', type=click.Path(exists=True, dir_okay=False, readable=True))
-@click.option('-o', 'apk_out', type=click.Path(file_okay=False), default='out')
-@click.option('-c', 'keywords', type=str, multiple=True)
+@click.argument("apk_path", type=click.Path(exists=True, dir_okay=False, readable=True))
+@click.option("-o", "apk_out", type=click.Path(file_okay=False), default="out")
+@click.option("-c", "keywords", type=str, multiple=True)
 def entry_point(apk_path, apk_out, keywords):
     def find_executable(executable, path=None):
         if not path:
-            path = os.environ['PATH']
+            path = os.environ["PATH"]
 
         paths = path.split(os.pathsep)
 
@@ -60,16 +60,16 @@ def entry_point(apk_path, apk_out, keywords):
         return True
 
     def generate_random_string(length):
-        return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+        return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
     def is_interactive():
         return not keywords
 
     # Setup logger
-    logger = logging.getLogger('UDcide-dlog')
+    logger = logging.getLogger("UDcide-dlog")
     logger.setLevel(logging.DEBUG)
-    ch_formater = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-    ch = logging.FileHandler('udcide.log', 'a')
+    ch_formater = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+    ch = logging.FileHandler("udcide.log", "a")
     ch.setFormatter(ch_formater)
     ch.setLevel(logging.DEBUG)
     logger.addHandler(ch)
@@ -77,19 +77,19 @@ def entry_point(apk_path, apk_out, keywords):
     if is_interactive():
         # Setup dialog
         dialog = Dialog(autowidgetsize=True)
-        dialog.set_background_title('UDcide')
+        dialog.set_background_title("UDcide")
     else:
         # Direct logger to stderr
         stream = logging.StreamHandler()
-        stream_formater = logging.Formatter('%(levelname)s: %(message)s')
+        stream_formater = logging.Formatter("%(levelname)s: %(message)s")
         stream.setFormatter(stream_formater)
         stream.setLevel(logging.INFO)
         logger.addHandler(stream)
 
     # Find tools in $PATH
     if is_interactive():
-        dialog.infobox('Detecting dependencies...')
-    tools = ['apktool', 'jarsigner', 'keytool']
+        dialog.infobox("Detecting dependencies...")
+    tools = ["apktool", "jarsigner", "keytool"]
     tool_paths = dict()
     for tool in tools:
         path = find_executable(tool)
@@ -106,21 +106,21 @@ def entry_point(apk_path, apk_out, keywords):
 
     # Download Quark Rules
     if not os.path.exists(config.DIR_PATH):
-        msg = 'Downloading Quark rules...'
+        msg = "Downloading Quark rules..."
         if is_interactive():
             dialog.infobox(msg)
         logger.info(msg)
         download()
 
     # Run Quark analysis
-    msg = 'Analysing APK with Quark-Engine.'
+    msg = "Analysing APK with Quark-Engine."
     if is_interactive():
         dialog.gauge_start(msg)
     logger.info(msg)
 
     rule_dir = config.DIR_PATH
     quark = Quark(apk_path)
-    rule_list = [x for x in os.listdir(rule_dir) if x.endswith('json')]
+    rule_list = [x for x in os.listdir(rule_dir) if x.endswith("json")]
 
     factor = 100 / len(rule_list)
     behavior_list = []
@@ -143,14 +143,14 @@ def entry_point(apk_path, apk_out, keywords):
 
     # Select behavior
     if is_interactive():
-        logger.info('Waiting for user to select behavires.')
+        logger.info("Waiting for user to select behavires.")
 
         code, tags = dialog.checklist(
-            'Select behaviores to disable.',
-            choices=[(c.description, '', False) for c in behavior_list],
+            "Select behaviores to disable.",
+            choices=[(c.description, "", False) for c in behavior_list],
         )
         if code == dialog.CANCEL:
-            logger.info('Canceled by user.')
+            logger.info("Canceled by user.")
             return
 
         selected_list = []
@@ -168,107 +168,107 @@ def entry_point(apk_path, apk_out, keywords):
                     selected_list.extend(behavior.sequences)
 
     if not selected_list:
-        msg = 'Nothing seleceted by user.'
+        msg = "Nothing seleceted by user."
         if is_interactive():
             dialog.msgbox(msg)
         logger.warning(msg)
         return
 
-    logger.info(f'Selected: {tags}')
+    logger.info(f"Selected: {tags}")
 
-    smali_dir = TemporaryDirectory('udcide').name
+    smali_dir = TemporaryDirectory("udcide").name
     apk_out = os.path.join(apk_out, os.path.basename(apk_path))
 
     TOTAL_STAGE = 4
     WEIGHT = 100 / TOTAL_STAGE
     # Unpack APK
-    msg = 'Unpacking APK...'
+    msg = "Unpacking APK..."
     if is_interactive():
         dialog.gauge_start(msg)
     logger.info(msg)
 
-    command = [tool_paths['apktool'], 'd', '-r', '-f', '-o', smali_dir, apk_path]
+    command = [tool_paths["apktool"], "d", "-r", "-f", "-o", smali_dir, apk_path]
 
-    if not exec_tool(command, 'Error on unpacking APK', input=b'b'):
+    if not exec_tool(command, "Error on unpacking APK", input=b"b"):
         return
 
     # Modify APK
-    msg = 'Modifying APK...'
+    msg = "Modifying APK..."
     if is_interactive():
         dialog.gauge_update(int(WEIGHT * 1), msg, True)
     logger.info(msg)
 
-    udcide = UDcide(apk_path, os.path.join(smali_dir, 'smali'))
+    udcide = UDcide(apk_path, os.path.join(smali_dir, "smali"))
     udcide.batch_disable(selected_list)
 
     # Pack APK
-    msg = 'Repacking APK...'
+    msg = "Repacking APK..."
     if is_interactive():
         dialog.gauge_update(int(WEIGHT * 2), msg, True)
     logger.info(msg)
 
-    command = [tool_paths['apktool'], 'b', '-o', apk_out, smali_dir]
+    command = [tool_paths["apktool"], "b", "-o", apk_out, smali_dir]
 
-    if not exec_tool(command, 'Error on repacking APK', input=b'b'):
+    if not exec_tool(command, "Error on repacking APK", input=b"b"):
         return
 
     # Sign APK
     # Generate random keystore
-    msg = 'Generating random keystore...'
+    msg = "Generating random keystore..."
     logger.info(msg)
     if is_interactive():
         dialog.gauge_update(int(WEIGHT * 3), msg, True)
 
     keystore_name = generate_random_string(8)
     keystore_path = os.path.join(tempfile.gettempdir(), keystore_name)
-    alias_name = 'CERT'
+    alias_name = "CERT"
     passphase = generate_random_string(8)
 
     command = [
-        tool_paths['keytool'],
-        '-genkey',
-        '-keystore',
+        tool_paths["keytool"],
+        "-genkey",
+        "-keystore",
         keystore_path,
-        '-alias',
+        "-alias",
         alias_name,
-        '-keyalg',
-        'RSA',
-        '-keysize',
-        '2048',
-        '-validity',
-        '10000',
+        "-keyalg",
+        "RSA",
+        "-keysize",
+        "2048",
+        "-validity",
+        "10000",
     ]
 
     input = os.linesep.join(
-        [passphase, passphase, '', '', '', '', '', '', 'yes']
+        [passphase, passphase, "", "", "", "", "", "", "yes"]
     ).encode()
 
-    if not exec_tool(command, 'Error on generating keystore.', input=input):
+    if not exec_tool(command, "Error on generating keystore.", input=input):
         return
 
-    msg = 'Signing...'
+    msg = "Signing..."
     if is_interactive():
         dialog.gauge_update(int(WEIGHT * 3), msg, True)
     logger.info(msg)
 
     command = [
-        tool_paths['jarsigner'],
-        '--sigalg',
-        'MD5withRSA',
-        '--digestalg',
-        'SHA1',
-        '-keystore',
+        tool_paths["jarsigner"],
+        "--sigalg",
+        "MD5withRSA",
+        "--digestalg",
+        "SHA1",
+        "-keystore",
         keystore_path,
-        '-storepass',
+        "-storepass",
         passphase,
         apk_out,
         alias_name,
     ]
 
-    if not exec_tool(command, 'Error on signing APK.', timeout=60):
+    if not exec_tool(command, "Error on signing APK.", timeout=60):
         return
 
-    msg = f'Successfully generate APK at {apk_out}'
+    msg = f"Successfully generate APK at {apk_out}"
     if is_interactive():
         dialog.gauge_update(100)
         dialog.gauge_stop()
@@ -276,5 +276,5 @@ def entry_point(apk_path, apk_out, keywords):
     logger.info(msg)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     entry_point()
