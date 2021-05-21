@@ -11,6 +11,18 @@ UDcide is a tool that provides alternative way to deal with Android malware. We 
 
 ![](https://i.imgur.com/TrvdsEr.gif)
 
+## Getting Start With VScode Extension
+We also provide a VScode extension to use UDcide, download from [Marketplace](https://marketplace.visualstudio.com/items?itemName=Aparna.udcide) and see the usage below.
+
+- `(Ctrl + Shift + P)` to open command palette -> `UDcide: Android Malware Behavior Deleter` -> Choose an APK file
+
+![](https://i.imgur.com/zUS3qaN.gif)
+
+
+- Select behavior to disable -> Click `Rebuild`
+
+![](https://i.imgur.com/UiPSO1u.gif)
+
 ## Showcase
 
 This is a showcase which the malware hides its icon after user clicks on it.
@@ -20,6 +32,13 @@ As you can see, the icon of the malware disappear right after the user clicks.
 
 With UDcide, we remove this behavior, got this malware no where to hide.
 ![](https://i.imgur.com/WRc8iKy.gif)
+
+### Showcase for VScode Extension
+This is the same showcase but using VScode extension to disable behavior.
+<img src="assets/vscode-showcase1.gif">
+
+Disable behavior by using UDcide VScode extension.
+<img src="assets/vscode-showcase2.gif">
 
 ## Requirements
 + dialog >= 1.3-20190808

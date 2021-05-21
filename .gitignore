@@ -140,6 +140,10 @@ cython_debug/
 # Visual studio code
 .vscode
 *.code-workspace
+out
+node_modules
+.vscode-test/
+*.vsix
 
 # Local History for Visual Studio Code
 .history/
