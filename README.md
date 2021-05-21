@@ -3,7 +3,20 @@
     <b> Android Malware Behavior Deleter </b>
 </p>
 
-
+<p align="center">
+    <a href="https://github.com/UDcide/udcide">
+        <img alt="Version" src="https://img.shields.io/badge/version-v21.5.21-blue">
+    </a>
+    <a href="https://marketplace.visualstudio.com/items?itemName=Aparna.udcide">
+        <img alt="Installs" src="https://img.shields.io/visual-studio-marketplace/i/aparna.udcide">
+    </a>
+        <a href="https://www.python.org/downloads/release/python-385/">
+        <img alt="python version" src="https://img.shields.io/badge/python-3.8.5-blue.svg">
+    </a>
+        <a href="https://github.com/UDcide/udcide/blob/main/LICENSE">
+        <img alt="license" src="https://img.shields.io/badge/License-GPLv3-blue.svg">
+    </a>
+</p>
 
 # UDcide
 
@@ -11,7 +24,7 @@ UDcide is a tool that provides alternative way to deal with Android malware. We 
 
 ![](https://i.imgur.com/TrvdsEr.gif)
 
-## Getting Start With VScode Extension
+## Getting Started With VScode Extension
 We also provide a VScode extension to use UDcide, download from [Marketplace](https://marketplace.visualstudio.com/items?itemName=Aparna.udcide) and see the usage below.
 
 - `(Ctrl + Shift + P)` to open command palette -> `UDcide: Android Malware Behavior Deleter` -> Choose an APK file
@@ -19,7 +32,7 @@ We also provide a VScode extension to use UDcide, download from [Marketplace](ht
 ![](https://i.imgur.com/zUS3qaN.gif)
 
 
-- Select behavior to disable -> Click `Rebuild`
+- Select behaviors to disable -> Click `Rebuild`
 
 ![](https://i.imgur.com/UiPSO1u.gif)
 
@@ -34,10 +47,10 @@ With UDcide, we remove this behavior, got this malware no where to hide.
 ![](https://i.imgur.com/WRc8iKy.gif)
 
 ### Showcase for VScode Extension
-This is the same showcase but using VScode extension to disable behavior.
+This is the same showcase but using VScode extension to disable the behavior.
 <img src="assets/vscode-showcase1.gif">
 
-Disable behavior by using UDcide VScode extension.
+Disable the behavior by using UDcide VScode extension.
 <img src="assets/vscode-showcase2.gif">
 
 ## Requirements
