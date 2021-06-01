@@ -5,7 +5,7 @@
 
 <p align="center">
     <a href="https://github.com/UDcide/udcide">
-        <img alt="Version" src="https://img.shields.io/badge/version-v21.5.21-blue">
+        <img alt="Version" src="https://img.shields.io/badge/version-v21.6.1-blue">
     </a>
     <a href="https://marketplace.visualstudio.com/items?itemName=Aparna.udcide">
         <img alt="Installs" src="https://img.shields.io/visual-studio-marketplace/i/aparna.udcide">
