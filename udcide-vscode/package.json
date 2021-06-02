@@ -2,7 +2,7 @@
 	"name": "udcide",
 	"displayName": "UDcide",
 	"description": "Android Malware Behavior Deleter",
-	"version": "21.5.20",
+	"version": "21.6.1",
 	"publisher": "Aparna",
 	"repository": "https://github.com/UDcide/udcide-vscode",
 	"icon": "logo.png",
